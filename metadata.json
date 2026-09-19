@@ -1,0 +1,6 @@
+{
+  "name": "Space Dodger",
+  "description": "Arcade space dodging game built with Compose Canvas featuring dynamic asteroid waves, shields, score bonuses, and particle effects.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
