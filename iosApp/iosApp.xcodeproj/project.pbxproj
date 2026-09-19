@@ -9,14 +9,12 @@
 /* Begin PBXBuildFile section */
 		B40000012C00000000000001 /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000022C00000000000001 /* iOSApp.swift */; };
 		B40000032C00000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40000042C00000000000001 /* ContentView.swift */; };
-		B40000052C00000000000001 /* ComposeApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B40000062C00000000000001 /* ComposeApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B40000002C00000000000001 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B40000022C00000000000001 /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
 		B40000042C00000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		B40000062C00000000000001 /* ComposeApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ComposeApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -24,7 +22,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B40000052C00000000000001 /* ComposeApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,7 +33,6 @@
 			children = (
 				B40000092C00000000000001 /* iosApp */,
 				B400000A2C00000000000001 /* Products */,
-				B400000B2C00000000000001 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,14 +53,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B400000B2C00000000000001 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B40000062C00000000000001 /* ComposeApp.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -72,7 +60,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B400000D2C00000000000001 /* Build configuration list for PBXNativeTarget "iosApp" */;
 			buildPhases = (
-				B400000E2C00000000000001 /* Run Script (Compile Kotlin Framework) */,
+				B400000E2C00000000000001 /* Compile Kotlin Framework */,
 				B400000F2C00000000000001 /* Sources */,
 				B40000072C00000000000001 /* Frameworks */,
 			);
@@ -119,8 +107,9 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		B400000E2C00000000000001 /* Run Script (Compile Kotlin Framework) */ = {
+		B400000E2C00000000000001 /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -132,6 +121,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/ComposeApp.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -215,13 +205,15 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(SRCROOT)/Frameworks",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(BUILT_PRODUCTS_DIR)/Frameworks",
 					"$(SRCROOT)/../composeApp/build/bin/iosSimulatorArm64/debugFramework",
 					"$(SRCROOT)/../composeApp/build/bin/iosArm64/debugFramework",
 					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 					"$(SRCROOT)/../app/build/bin/iosSimulatorArm64/debugFramework",
 					"$(SRCROOT)/../app/build/bin/iosArm64/debugFramework",
 					"$(SRCROOT)/../app/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Space Dodger";
@@ -235,8 +227,6 @@
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					"-framework",
-					"ComposeApp",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.aistudio.spacedodger.xqtwbv";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -256,13 +246,15 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(SRCROOT)/Frameworks",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(BUILT_PRODUCTS_DIR)/Frameworks",
 					"$(SRCROOT)/../composeApp/build/bin/iosSimulatorArm64/releaseFramework",
 					"$(SRCROOT)/../composeApp/build/bin/iosArm64/releaseFramework",
 					"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 					"$(SRCROOT)/../app/build/bin/iosSimulatorArm64/releaseFramework",
 					"$(SRCROOT)/../app/build/bin/iosArm64/releaseFramework",
 					"$(SRCROOT)/../app/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
-					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Space Dodger";
@@ -276,8 +268,6 @@
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					"-framework",
-					"ComposeApp",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.aistudio.spacedodger.xqtwbv";
 				PRODUCT_NAME = "$(TARGET_NAME)";

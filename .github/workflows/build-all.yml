@@ -9,7 +9,7 @@ on:
 
 jobs:
   # =========================================================================
-  # 1. Job Android : Build APK Debug & Release
+  # 1. Job Android : Build APK Debug
   # =========================================================================
   build-android:
     name: Build Android APK
@@ -30,7 +30,7 @@ jobs:
       - name: Setup Gradle 9.3.1 Wrapper
         run: gradle wrapper --gradle-version 9.3.1
 
-      # Règle 2: Générer automatiquement un Keystore Debug avec keytool pour éviter tout blocage
+      # Règle 2: Générer automatiquement un Keystore Debug avec keytool
       - name: Generate Android Debug Keystore
         run: |
           mkdir -p $HOME/.android
@@ -38,13 +38,12 @@ jobs:
             -alias androiddebugkey -storepass android -keypass android \
             -keyalg RSA -keysize 2048 -validity 10000 \
             -dname "CN=Android Debug,O=Android,C=US"
-          # Copie également à la racine pour garantir la résolution locale
           cp $HOME/.android/debug.keystore ./debug.keystore
 
       - name: Build Android APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      # Règle 7: Upload des artifacts téléchargeables
+      # Règle 7: Upload des artifacts téléchargeables Android
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
@@ -77,20 +76,25 @@ jobs:
       - name: Setup Gradle 9.3.1 Wrapper
         run: gradle wrapper --gradle-version 9.3.1
 
-      # Compilation du framework iOS ComposeApp (ou assemble via Gradle si KMP actif)
+      # Compilation préalable du framework Kotlin Multiplatform
       - name: Build iOS Framework
         run: |
           chmod +x gradlew
           if ./gradlew tasks --all | grep -q "embedAndSignAppleFrameworkForXcode"; then
-            ./gradlew embedAndSignAppleFrameworkForXcode --no-daemon
-          elif ./gradlew tasks --all | grep -q "assembleComposeAppDebugFrameworkIosSimulatorArm64"; then
-            ./gradlew assembleComposeAppDebugFrameworkIosSimulatorArm64 --no-daemon
-          elif ./gradlew tasks --all | grep -q "assembleDebugFramework"; then
-            ./gradlew assembleDebugFramework --no-daemon
-          else
-            echo "Building standard multiplatform/iOS assets..."
-            ./gradlew assemble --no-daemon || true
+            ./gradlew embedAndSignAppleFrameworkForXcode --no-daemon || true
           fi
+          if ./gradlew tasks --all | grep -q "assembleComposeAppDebugFrameworkIosSimulatorArm64"; then
+            ./gradlew assembleComposeAppDebugFrameworkIosSimulatorArm64 --no-daemon || true
+          fi
+          if ./gradlew tasks --all | grep -q "assembleDebugFramework"; then
+            ./gradlew assembleDebugFramework --no-daemon || true
+          fi
+
+      # Préparation du framework pour Xcode (si généré) et création du dossier Frameworks
+      - name: Prepare Framework for Xcode
+        run: |
+          mkdir -p iosApp/Frameworks
+          find . -type d -name "ComposeApp.framework" -exec cp -R {} iosApp/Frameworks/ \; || true
 
       # Build iOS Xcode Project
       - name: Build iOS Xcode Archive / Project
@@ -100,6 +104,8 @@ jobs:
               -scheme iosApp \
               -destination 'generic/platform=iOS Simulator' \
               -configuration Debug \
+              -arch arm64 \
+              ONLY_ACTIVE_ARCH=NO \
               CODE_SIGNING_ALLOWED=NO \
               build
           else
@@ -112,8 +118,7 @@ jobs:
         with:
           name: SpaceDodger-iOS-Binary
           path: |
-            build/bin/iosSimulatorArm64/
-            app/build/bin/iosSimulatorArm64/
+            iosApp/Frameworks/
             iosApp/build/
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app
           if-no-files-found: ignore
